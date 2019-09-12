@@ -13,23 +13,26 @@ const Schema = new mongoose.Schema({
 
 const Login = mongoose.model("Auth",Schema);
 
-// const ret= Login.findOne({email:"syedmohi04@gmail.com"},function(err,data){
-//     if(err) {
-//         return err;
-//     }else{
-//         const log = Login({
-//             username:"charles",
-//             email:"charles@gmail.com",
-//             password:"chars3r4"
-//         });
-//         log.save()
-//         .then(()=>console.log('Register Successfull...'))
-//         .catch(err=>console.log("User with these email address already found !"));
-//     }
-    
-// });
+exports.lookFor = function(user,email,password){
+    Login.findOne({email:email},function(err,data){
+        if(err) {
+            return err;
+        }else{
+            const log = Login({
+                username:user,
+                email:email,
+                password:password
+            });
+            log.save()
+            .then(()=> {return true})
+            .catch(err=>{return false});
+        }
+        
+    });
+}
 
 
 
 module.exports = Login;
+
 
