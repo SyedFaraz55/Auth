@@ -1,7 +1,7 @@
 const Login = require('../db/db.config');
 const Joi = require('@hapi/joi');
 const bcrypt = require('bcrypt');
-
+const passport = require("passport");
 
 const Schema = Joi.object({
     username: Joi.string().min(3).max(30).required(),
@@ -89,7 +89,11 @@ exports.postLogin = function (req,res) {
                             console.log(err); //
                         } else {
                             if(pass){
-                                res.render('dashboard',{name:name});
+                                const user_id = data.id;
+                                console.log(user_id);
+                                req.login(user_id,function(err){
+                                    res.redirect("/dashboard");
+                                });
                             } else{
                                 res.render("login",{title:"Login",error:"",msg:"Please check your password !"})
                             }
@@ -102,4 +106,11 @@ exports.postLogin = function (req,res) {
     });
     
 }
+passport.serializeUser(function(user_id, done) {
+    done(null, user_id);
+  });
+  
+  passport.deserializeUser(function(user_id, done) {
+      done(null, user_id);    
+  });
 
